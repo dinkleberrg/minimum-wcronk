@@ -106,3 +106,14 @@ minemu_data_abort_entry:
     ldmia sp, {r0-r12}
     add sp, sp, #88
     subs pc, lr, #8
+
+minemu_irq_trampoline:
+    sub sp, sp, #88
+    stmia sp, {r0-12}
+    str lr, [sp, #52]
+    mrs r1, spsr
+    str r1, [sp, #56]
+    
+
+minemu_irq_dispatch:
+    
