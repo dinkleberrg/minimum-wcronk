@@ -28,3 +28,7 @@ void minemu_printf(const char* string) {
         minemu_uart0_write((uint32_t)string[i]);
     }
 }
+
+void minemu_uart0_irq_handler() {
+    minemu_printf("IRQ called\n");
+}
