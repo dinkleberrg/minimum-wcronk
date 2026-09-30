@@ -10,7 +10,7 @@ void send_hwrld() {
 
 void minemu_printf(const char* string) {
     uint32_t length = 0;
-    while (string[length] != "\0")
+    while (string[length] != '\0')
         length++;
     for (int i = 0; i < length; i++) {
         while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_TX_READY));
