@@ -1,4 +1,4 @@
-#include "minemu/platform.h"
+#include "minemu/uart.h"
 
 void send_hwrld() {
     uint32_t hwrld[12] = {0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64, 0x0A};
@@ -7,6 +7,15 @@ void send_hwrld() {
         MINEMU_UART0->tx_data = (uint32_t)hwrld[i];
     }
 }
+
+/*
+void minemu_echo() {
+    while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_RX_READY));
+    uint32_t read = MINEMU_UART0->rx_data;
+    while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_RX_READY));
+    MINEMU_UART0->tx_data = read;
+}
+*/
 
 void minemu_printf(const char* string) {
     int length = 0;
