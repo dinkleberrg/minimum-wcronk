@@ -1,6 +1,4 @@
 #include "minemu/platform.h"
-#include <stdio.h>
-#include <string.h>
 
 void send_hwrld() {
     uint32_t hwrld[12] = {0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64, 0x0A};
@@ -11,7 +9,9 @@ void send_hwrld() {
 }
 
 void minemu_printf(const char* string) {
-    uint32_t length = strlen(string);
+    uint32_t length = 0;
+    while (string[length] != "\0")
+        length++;
     for (int i = 0; i < length; i++) {
         while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_TX_READY));
         MINEMU_UART0->tx_data = (uint32_t)string[i];
