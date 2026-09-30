@@ -110,7 +110,7 @@ minemu_data_abort_entry:
 
 minemu_irq_trampoline:
     sub sp, sp, #88
-    stmia sp, {r0-12}
+    stmia sp, {r0-r12}
     str lr, [sp, #52]
     mrs r1, spsr
     str r1, [sp, #56]
