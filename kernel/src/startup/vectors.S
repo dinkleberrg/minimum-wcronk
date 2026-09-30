@@ -148,4 +148,4 @@ minemu_irq_dispatch:
     ldr lr, [sp, #0]
     ldr r0, [sp, #4]
     add sp, sp, #8
-    b lr
+    bx lr
