@@ -107,8 +107,6 @@ minemu_data_abort_entry:
     ldmia sp, {r0-r12}
     add sp, sp, #88
     subs pc, lr, #8
-<<<<<<< Updated upstream
-=======
 
 minemu_irq_trampoline:
     sub sp, sp, #88
@@ -151,4 +149,3 @@ minemu_irq_dispatch:
     ldr r0, [sp, #4]
     add sp, sp, #8
     b lr
->>>>>>> Stashed changes
