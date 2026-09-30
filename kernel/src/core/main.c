@@ -16,7 +16,6 @@ void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
         minemu_fail_stop();
     }
     minemu_printf("hello world\n");
-    minemu_printf("hi jorge\n");
     minemu_trace_event(1);
     minemu_fail_stop();
 }

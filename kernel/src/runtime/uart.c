@@ -1,28 +1,30 @@
 #include "minemu/uart.h"
 
-void send_hwrld() {
-    uint32_t hwrld[12] = {0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64, 0x0A};
-    for(int i = 0; i < 12; i++) { 
-        while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_TX_READY));
-        MINEMU_UART0->tx_data = (uint32_t)hwrld[i];
-    }
+uint32_t minemu_uart0_read() {
+    while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_RX_READY));
+    return MINEMU_UART0->rx_data;
 }
 
-/*
-void minemu_echo() {
-    while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_RX_READY));
-    uint32_t read = MINEMU_UART0->rx_data;
-    while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_RX_READY));
-    MINEMU_UART0->tx_data = read;
+void minemu_uart0_write(uint32_t data) {
+    while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_TX_READY));
+    MINEMU_UART0->tx_data = data;
 }
-*/
+
+uint32_t minemu_uart1_read() {
+    while (!(MINEMU_UART1->status & MINEMU_UART_STATUS_RX_READY));
+    return MINEMU_UART1->rx_data;
+}
+
+void minemu_uart1_write(uint32_t data) {
+    while (!(MINEMU_UART1->status & MINEMU_UART_STATUS_TX_READY));
+    MINEMU_UART1->tx_data = data;
+}
 
 void minemu_printf(const char* string) {
     int length = 0;
     while (string[length] != '\0')
         length++;
     for (int i = 0; i < length; i++) {
-        while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_TX_READY));
-        MINEMU_UART0->tx_data = (uint32_t)string[i];
+        minemu_uart0_write((uint32_t)string[i]);
     }
 }

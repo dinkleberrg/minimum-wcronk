@@ -3,7 +3,10 @@
 
 #include "minemu/platform.h"
 
-void send_hwrld();
+uint32_t minemu_uart0_read();
+void minemu_uart0_write(uint32_t);
+uint32_t minemu_uart1_read();
+void minemu_uart1_write(uint32_t);
 void minemu_printf(const char*);
 
 #endif
