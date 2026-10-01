@@ -108,6 +108,8 @@ minemu_data_abort_entry:
     add sp, sp, #88
     subs pc, lr, #8
 
+.global minemu_irq_trampoline
+.type minemu_irq_trampoline, %function
 minemu_irq_trampoline:
     sub sp, sp, #88
     stmia sp, {r0-r12}
@@ -138,6 +140,8 @@ minemu_irq_trampoline:
     add sp, sp, #88
     subs pc, lr, #4
 
+.global minemu_irq_dispatch
+.type minemu_irq_dispatch, %function
 minemu_irq_dispatch:
     ldr r1, [sp, #60]
     @cmp r1, #1
