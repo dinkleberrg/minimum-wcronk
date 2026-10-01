@@ -140,11 +140,11 @@ minemu_irq_trampoline:
 
 minemu_irq_dispatch:
     ldr r1, [sp, #60]
-    cmp r1, #1
+    @cmp r1, #1
     sub sp, sp, #8
     str lr, [sp, #0]
     str r0, [sp, #4]
-    bleq minemu_uart0_irq_handler
+    bl minemu_uart0_irq_handler
     ldr lr, [sp, #0]
     ldr r0, [sp, #4]
     add sp, sp, #8
