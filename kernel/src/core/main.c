@@ -3,6 +3,7 @@
 #include "minemu/trace.h"
 #include "minemu/uart.h"
 #include "minemu/irq.h"
+#include "minemu/msh.h"
 
 void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
     if ((uintptr_t)boot_info != MINEMU_BOOT_INFO_VADDR ||
@@ -16,20 +17,12 @@ void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
         minemu_trace_event(UINT32_C(0xb007bad0));
         minemu_fail_stop();
     }
+    MINEMU_INTERRUPT->enable |= UINT32_C(1) << MINEMU_IRQ_UART0;
+    MINEMU_UART0->control |= MINEMU_UART_CONTROL_RX_IRQ_ENABLE;
     minemu_irq_enable();
-    uint32_t cpsr_val;
-    __asm__ volatile("mrs %0, cpsr" : "=r"(cpsr_val));
-
-    // Check if Bit 7 (IRQ mask) is set. 
-    // If (cpsr_val & 0x80) is true, interrupts are STILL locked out by the hardware!
-    if (cpsr_val & 0x80) {
-        minemu_trace_event(0xDEADBEEF); // Proof that minemu_irq_enable() failed to unmask
-    }
 
     minemu_trace_event(1);
 
-    while (1) {
-        __asm__ volatile("wfi");
-    }
+    run_msh();
     //minemu_fail_stop();
 }

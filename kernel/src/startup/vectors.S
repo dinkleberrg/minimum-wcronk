@@ -120,7 +120,7 @@ minemu_irq_trampoline:
     ldr r1, [r1, #8]
     str r1, [sp, #60]
     sub r1, lr, #4
-    str r1, [sp, #64]    
+    str r1, [sp, #64]
     mov r1, #0
     str r1, [sp, #68]
     str r1, [sp, #72]
@@ -131,11 +131,12 @@ minemu_irq_trampoline:
     mov r0, sp
     bl minemu_irq_dispatch
     mov sp, r0
-    ldr lr, [sp, #52]
     ldr r1, [sp, #56]
-    msr spsr, r1
+    msr spsr_cxsf, r1
     add r1, sp, #76
     ldmia r1, {sp, lr}^
+    nop
+    ldr lr, [sp, #52]
     ldmia sp, {r0-r12}
     add sp, sp, #88
     subs pc, lr, #4
@@ -143,12 +144,17 @@ minemu_irq_trampoline:
 .global minemu_irq_dispatch
 .type minemu_irq_dispatch, %function
 minemu_irq_dispatch:
-    ldr r1, [sp, #60]
-    @cmp r1, #1
     sub sp, sp, #8
     str lr, [sp, #0]
     str r0, [sp, #4]
+    ldr r1, [sp, #68]
+    cmp r1, #1
+    bne exit_dispatch
     blx minemu_uart0_irq_handler
+exit_dispatch:
+    ldr r0, =0x10000000   
+    ldr r1, [sp, #68]
+    str r1, [r0, #12] 
     ldr lr, [sp, #0]
     ldr r0, [sp, #4]
     add sp, sp, #8

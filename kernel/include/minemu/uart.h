@@ -8,6 +8,7 @@ void minemu_uart0_write(uint32_t);
 uint32_t minemu_uart1_read();
 void minemu_uart1_write(uint32_t);
 void minemu_printf(const char*);
+char uart_buf_pop();
 void minemu_uart0_irq_handler();
 
 #endif
