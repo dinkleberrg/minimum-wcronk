@@ -18,5 +18,9 @@ void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
     }
     minemu_irq_enable();
     minemu_trace_event(1);
-    minemu_fail_stop();
+
+    while (1) {
+        __asm__ volatile("wfi");
+    }
+    //minemu_fail_stop();
 }
