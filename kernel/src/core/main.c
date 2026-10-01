@@ -17,6 +17,15 @@ void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
         minemu_fail_stop();
     }
     minemu_irq_enable();
+    uint32_t cpsr_val;
+    __asm__ volatile("mrs %0, cpsr" : "=r"(cpsr_val));
+
+    // Check if Bit 7 (IRQ mask) is set. 
+    // If (cpsr_val & 0x80) is true, interrupts are STILL locked out by the hardware!
+    if (cpsr_val & 0x80) {
+        minemu_trace_event(0xDEADBEEF); // Proof that minemu_irq_enable() failed to unmask
+    }
+
     minemu_trace_event(1);
 
     while (1) {
