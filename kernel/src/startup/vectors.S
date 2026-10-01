@@ -109,6 +109,7 @@ minemu_data_abort_entry:
     subs pc, lr, #8
 
 minemu_irq_trampoline:
+    subs lr, lr, #4
     sub sp, sp, #88
     stmia sp, {r0-r12}
     str lr, [sp, #52]
@@ -129,14 +130,14 @@ minemu_irq_trampoline:
     mov r0, sp
     bl minemu_irq_dispatch
     mov sp, r0
-    ldr lr, [sp, #52]
     ldr r1, [sp, #56]
-    msr spsr, r1
+    msr spsr_csxf, r1
+    ldr lr, [sp, #52]
     add r1, sp, #76
     ldmia r1, {sp, lr}^
     ldmia sp, {r0-r12}
     add sp, sp, #88
-    subs pc, lr, #4
+    subs pc, lr, #0
 
 minemu_irq_dispatch:
     ldr r1, [sp, #60]
