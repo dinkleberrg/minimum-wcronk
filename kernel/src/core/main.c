@@ -8,7 +8,6 @@
 #include "minemu/trace.h"
 #include "minemu/uart.h"
 #include "minemu/irq.h"
-#include "minemu/msh.h"
 
 #define BOOTSTRAP_PAGE_DIRECTORY_PADDR UINT32_C(0x40010000)
 #define USER_IMAGE_BASE UINT32_C(0x00400000)
@@ -285,9 +284,9 @@ void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
         minemu_fail_stop();
     }
 
-    MINEMU_INTERRUPT->enable |= UINT32_C(1) << MINEMU_IRQ_UART0;
-    MINEMU_UART0->control |= MINEMU_UART_CONTROL_RX_IRQ_ENABLE;
-    minemu_irq_enable();
+    //MINEMU_INTERRUPT->enable |= UINT32_C(1) << MINEMU_IRQ_UART0;
+    //MINEMU_UART0->control |= MINEMU_UART_CONTROL_RX_IRQ_ENABLE;
+    //minemu_irq_enable();
         
     minemu_enter_user(module->entry_vaddr, USER_STACK_TOP);
 

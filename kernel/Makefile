@@ -13,7 +13,6 @@ RUNTIME_OBJECTS := \
 	$(BUILD)/runtime/memory.o \
 	$(BUILD)/runtime/trace.o \
 	$(BUILD)/runtime/uart.o \
-	$(BUILD)/runtime/msh.o \
 	$(BUILD)/runtime/syscall.o \
 	$(BUILD)/startup/boot.o \
 	$(BUILD)/startup/vectors.o \
