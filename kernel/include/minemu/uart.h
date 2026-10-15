@@ -3,10 +3,10 @@
 
 #include "minemu/platform.h"
 
-uint32_t minemu_uart0_read();
-void minemu_uart0_write(uint32_t);
-uint32_t minemu_uart1_read();
-void minemu_uart1_write(uint32_t);
+int minemu_uart0_read(char* dst, uint32_t n);
+int minemu_uart0_write(const char* src, uint32_t n);
+int minemu_uart1_read(char* dst, uint32_t n);
+int minemu_uart1_write(const char* src, uint32_t n);
 void minemu_printf(const char*);
 char uart_buf_pop();
 void minemu_uart0_irq_handler();

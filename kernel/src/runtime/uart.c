@@ -7,23 +7,40 @@ static char uart_rx_buf[BUFFER_SIZE];
 static uint32_t rx_buf_head = 0;
 static uint32_t rx_buf_tail = 0;
 
-uint32_t minemu_uart0_read() {
+int minemu_uart0_read(char* dst, uint32_t n) {
+    uint32_t i = 0;
+    while (MINEMU_UART0->status & MINEMU_UART_STATUS_RX_READY && i < n) {
+        dst[i++] = (char)MINEMU_UART0->rx_data;
+    }
+    if (i == 0)
+        return -1;
+    return (int)i;
+}
+
+int minemu_uart0_write(const char* src, uint32_t n) {
+    for (uint32_t i = 0; i < n; i++) {
+        while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_TX_READY));
+        MINEMU_UART0->tx_data = (uint32_t)(src[i]);
+    }
     return 0;
 }
 
-void minemu_uart0_write(uint32_t data) {
-    while (!(MINEMU_UART0->status & MINEMU_UART_STATUS_TX_READY));
-    MINEMU_UART0->tx_data = data;
+int minemu_uart1_read(char* dst, uint32_t n) {
+    uint32_t i = 0;
+    while (MINEMU_UART1->status & MINEMU_UART_STATUS_RX_READY && i < n) {
+        dst[i++] = (char)MINEMU_UART1->rx_data;
+    }
+    if (i == 0)
+        return -1;
+    return (int)i;
 }
 
-uint32_t minemu_uart1_read() {
-    while (!(MINEMU_UART1->status & MINEMU_UART_STATUS_RX_READY));
-    return MINEMU_UART1->rx_data;
-}
-
-void minemu_uart1_write(uint32_t data) {
-    while (!(MINEMU_UART1->status & MINEMU_UART_STATUS_TX_READY));
-    MINEMU_UART1->tx_data = data;
+int minemu_uart1_write(const char* src, uint32_t n) {
+    for (uint32_t i = 0; i < n; i++) {
+        while (!(MINEMU_UART1->status & MINEMU_UART_STATUS_TX_READY));
+        MINEMU_UART1->tx_data = (uint32_t)(src[i]);
+    }
+    return 0;
 }
 
 void minemu_printf(const char* string) {
@@ -31,7 +48,7 @@ void minemu_printf(const char* string) {
     while (string[length] != '\0')
         length++;
     for (uint32_t i = 0; i < length; i++) {
-        minemu_uart0_write((uint32_t)string[i]);
+        minemu_uart0_write(string + i, 1);
     }
 }
 

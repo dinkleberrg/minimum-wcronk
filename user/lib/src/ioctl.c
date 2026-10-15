@@ -2,6 +2,7 @@
 #include <stdint.h>
 
 #include "minemu/user_abi.h"
+#include "minemu/platform.h"
 
 static int32_t ioctl_svc(int fd, uint32_t request, uint32_t argument0,
                          uint32_t argument1) {
@@ -24,20 +25,26 @@ int32_t ioctl(int fd, uint32_t request, ...) {
     va_list arguments;
 
     va_start(arguments, request);
-    switch (request) {
-    case MINEMU_IOCTL_UART_READ:
-    case MINEMU_IOCTL_UART_WRITE:
-        argument0 = (uint32_t)(uintptr_t)va_arg(arguments, void *);
-        argument1 = va_arg(arguments, uint32_t);
+    switch ((uint32_t)fd) {
+    case MINEMU_UART0_BASE:
+    case MINEMU_UART1_BASE:
+        if (request == 0U || request == 1U) {
+            argument0 = (uint32_t)(uintptr_t)va_arg(arguments, void *);
+            argument1 = va_arg(arguments, uint32_t);
+        }
         break;
-    case MINEMU_IOCTL_RNG_NEXT:
-    case MINEMU_IOCTL_RNG_STATE:
-        argument0 = (uint32_t)(uintptr_t)va_arg(arguments, uint32_t *);
+
+    case MINEMU_RNG_BASE:
+        if (request == 0U)
+            argument0 = va_arg(arguments, uint32_t);
+        else if (request == 1U)     /* read: uint32_t *out */
+            argument0 = (uint32_t)(uintptr_t)va_arg(arguments, uint32_t *);
         break;
-    case MINEMU_IOCTL_RNG_SEED:
-    case MINEMU_IOCTL_TRACE_EVENT:
+
+    case MINEMU_TRACE_BASE:
         argument0 = va_arg(arguments, uint32_t);
         break;
+
     default:
         break;
     }
